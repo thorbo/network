@@ -1,0 +1,47 @@
+{% extends "network/layout.html" %}
+{% block head %}
+<style>
+    h3 {
+    margin: 20px;
+    }
+</style>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        {% if user.is_authenticated and user.username != profile.username and allow %}
+        document.querySelector('#follow').onclick = () => {
+            Follow("{{profile.username}}")
+        }
+        {% endif %}
+
+<!--        document.querySelector('#pages').style.display = 'none'-->
+
+    })
+
+    var loadMode = "{{profile.username}}"
+    window.loadMode = loadMode
+    loadPost(loadMode, 1)
+</script>
+{% endblock %}
+
+
+{% block body %}
+
+<div style="display:block">
+    <div style="display:flex; justify-content:center">
+        <h1>{{profile.username}}</h1>
+        {% if user.is_authenticated and user.username != profile.username %}
+            {% if allow %}
+                <button id="follow" data-state=true class="btn btn-primary">Follow</button>
+            {% else %}
+                <button id="follow" data-state=false class="btn btn-primary">Unfollow</button>
+            {% endif %}
+        {% endif %}
+    </div>
+    <div style="display:flex; justify-content:center;">
+        <h3>Followers: {{followers}}</h3>
+        <h3>Following: {{following}}</h3>
+    </div>
+</div>
+
+<div id="posts"></div>
+{% endblock %}

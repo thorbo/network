@@ -1,0 +1,15 @@
+{% extends "network/layout.html" %}
+
+{% block head %}
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        var loadMode = "following"
+        window.loadMode = loadMode
+        loadPost(loadMode, 1)
+    })
+</script>
+{% endblock %}
+
+{% block body %}
+    <div id="posts"></div>
+{% endblock %}

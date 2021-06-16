@@ -1,0 +1,11 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+    <form action ="{% url 'new' %}" method="post" >
+        {% csrf_token %}
+        <div style="display: flex; justify-content: space-around; margin-inline: 15%; margin-block: 20px">
+            <button class="btn btn-primary" type="submit">Post</button>
+            <textarea name="content" class="form-control" rows="3" placeholder="128 char limit..." required></textarea>
+        </div>
+    </form>
+{% endblock %}
