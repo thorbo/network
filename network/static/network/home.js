@@ -26,16 +26,26 @@ async function loadPost(mode, page) {
         const poster = document.createElement('h4')
         const likes = document.createElement('h6')
         const postTime = document.createElement('h6')
+        const edit = document.createElement('button')
+
 
         content.innerHTML = `${post.content}`
         poster.innerHTML = `${post.poster}`
         likes.innerHTML = `Likes: ${post.likes}`
         postTime.innerHTML = `Time: ${post.postTime}`
+        edit.innerHTML = "Edit"
 
         div.append(poster)
         div.append(content)
         div.append(likes)
         div.append(postTime)
+        let user = {{ user }}
+        if ( user == post.poster) {
+            div.append(edit)
+        }
+
+
+
         document.querySelector("#posts").append(div)
     })
 }

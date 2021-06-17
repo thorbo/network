@@ -7,10 +7,6 @@ class User(AbstractUser):
     liked = models.ManyToManyField("Posts", blank=True, null=True, related_name="likers", symmetrical=False)
     pass
 
-# class Follow(models.Model):
-#     follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name="followings")
-#     following = models.ForeignKey(User, on_delete=models.CASCADE, related_name="followers")
-
 
 class Posts(models.Model):
     content = models.CharField(max_length=128)
@@ -23,5 +19,6 @@ class Posts(models.Model):
             "content": self.content,
             "poster": self.poster.username,
             "likes": self.likes,
-            "postTime": self.postTime.strftime("%b %d %Y, %I:%M %p")
+            "postTime": self.postTime.strftime("%b %d %Y, %I:%M %p"),
+            "postNum": self.pk,
         }

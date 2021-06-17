@@ -108,8 +108,12 @@ def posts(request, mode=None):
     posts = posts.order_by("-postTime").all()
     posts = Paginator(posts, 10)
     posts = posts.page(page)
-    return JsonResponse([post.serialize() for post in posts], safe=False)
-
+    postResponse = []
+    for post in posts:
+        postResponse.append(post.serialize())
+        postResponse[-1]["liked"] = User.objects.get(username= request.user.username) in post.likers.all()
+    # return JsonResponse([post.serialize() for post in posts], safe=False)
+    return JsonResponse(postResponse, safe=False)
 
 @csrf_exempt
 @login_required
@@ -120,13 +124,45 @@ def follow(request):
         data = json.loads(request.body)
         user = User.objects.get(username=request.user.username)
         following = User.objects.get(username=data["following"])
-        print(data["follow"])
+
         if data["follow"] == "true":
             user.following.add(following)
         else:
             user.following.remove(following)
         return HttpResponse(status=204)
 
+@csrf_exempt
+@login_required
+def edit(request):
+    # API interaction to update post content
+
+    if request.method == "PUT":
+        data = json.loads(request.body)
+        content = data["content"]
+        postNum = data["postNum"]
+        post = Posts.objects.get(pk=postNum)
+        post.content = content
+        post.save()
+        return HttpResponse(204)
+
+@csrf_exempt
+@login_required
+def like(request):
+    # API interaction to update likes for post and liked for user
+
+    if request.method == "PUT":
+        data = json.loads(request.body)
+        user = User.objects.get(username=request.user.username)
+        post = Posts.objects.get(pk=int(data["postNum"]))
+        if data["like"] == 'true':
+            post.likes += 1
+            post.save()
+            user.liked.add(post)
+        else:
+            post.likes -= 1
+            post.save()
+            user.liked.remove(post)
+        return HttpResponse(204)
 
 def profile(request, profile):
     # Render user profile page from url
